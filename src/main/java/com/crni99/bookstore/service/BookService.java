@@ -17,54 +17,52 @@ import com.crni99.bookstore.repository.BookRepository;
 @Service
 public class BookService {
 
-	private final BookRepository bookRepository;
+    private final BookRepository bookRepository;
 
-	public BookService(BookRepository bookRepository) {
-		this.bookRepository = bookRepository;
-	}
+    public BookService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
 
-	public Page<Book> findPaginated(Pageable pageable, String term) {
+    public Page<Book> findPaginated(Pageable pageable, String term) {
+        return page(pageable, term);
+    }
 
-		return page(pageable, term);
-	}
+    private Page<Book> page(Pageable pageable, String term) {
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
 
-	private Page<Book> page(Pageable pageable, String term) {
-		int pageSize = pageable.getPageSize();
-		int currentPage = pageable.getPageNumber();
-		int startItem = currentPage * pageSize;
+        ArrayList<Book> books;
+        List<Book> list;
 
-		ArrayList<Book> books;
-		List<Book> list;
+        if (term == null || term.isEmpty()) {
+            books = (ArrayList<Book>) bookRepository.findAll();
+        } else {
+            books = (ArrayList<Book>) bookRepository.findByNameContaining(term);
+        }
 
-		if (term == null) {
-			books = (ArrayList<Book>) bookRepository.findAll();
-		} else {
-			books = (ArrayList<Book>) bookRepository.findByNameContaining(term);
-		}
+        if (books.size() < startItem) {
+            list = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, books.size());
+            list = books.subList(startItem, toIndex);
+        }
 
-		if (books.size() < startItem) {
-			list = Collections.emptyList();
-		} else {
-			int toIndex = Math.min(startItem + pageSize, books.size());
-			list = books.subList(startItem, toIndex);
-		}
+        Page<Book> bookPage = new PageImpl<>(list, PageRequest.of(currentPage, pageSize), books.size());
 
-		Page<Book> bookPage = new PageImpl<Book>(list, PageRequest.of(currentPage, pageSize), books.size());
+        return bookPage;
+    }
 
-		return bookPage;
-	}
+    public void save(Book book) {
+        bookRepository.save(book);
+    }
 
-	public void save(Book book) {
-		bookRepository.save(book);
-	}
+    public Optional<Book> findBookById(Long id) {
+        Optional<Book> book = bookRepository.findById(id);
+        return book;
+    }
 
-	public Optional<Book> findBookById(Long id) {
-		Optional<Book> book = bookRepository.findById(id);
-		return book;
-	}
-
-	public void delete(Long id) {
-		bookRepository.deleteById(id);
-	}
-
+    public void delete(Long id) {
+        bookRepository.deleteById(id);
+    }
 }

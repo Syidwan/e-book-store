@@ -17,50 +17,55 @@ import com.crni99.bookstore.service.BookService;
 
 @Controller
 public class HomeController {
-	
-	private static final int pageSizeDefault = 6;
 
-	private final BookService bookService;
+    private static final int pageSizeDefault = 6;
 
-	public HomeController(BookService bookService) {
-		this.bookService = bookService;
-	}
+    private final BookService bookService;
 
-	@GetMapping(value = { "", "/" })
-	public String listBooks(Model model, @RequestParam("page") Optional<Integer> page,
-			@RequestParam("size") Optional<Integer> size) {
+    public HomeController(BookService bookService) {
+        this.bookService = bookService;
+    }
 
-		return page(null, model, page, size);
-	}
+    @GetMapping(value = { "", "/" })
+    public String showDashboard() {
+        return "dashboard"; // Mengarahkan ke dashboard.html
+    }
 
-	@GetMapping("/search")
-	public String searchBooks(@RequestParam("term") String term, Model model,
-			@RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
-		if (term.isBlank()) {
-			return "redirect:/";
-		}
-		return page(term, model, page, size);
-	}
+    @GetMapping("/listBooks")
+    public String listBooks(Model model, @RequestParam("page") Optional<Integer> page,
+            @RequestParam("size") Optional<Integer> size) {
 
-	private String page(@RequestParam("term") String term, Model model, @RequestParam("page") Optional<Integer> page,
-			@RequestParam("size") Optional<Integer> size) {
-		int currentPage = page.orElse(1);
-		int pageSize = size.orElse(pageSizeDefault);
+        return page(null, model, page, size);
+    }
 
-		Page<Book> bookPage;
+    @GetMapping("/search")
+    public String searchBooks(@RequestParam("term") String term, Model model,
+            @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
+        if (term.isBlank()) {
+            return "redirect:/";
+        }
+        return page(term, model, page, size);
+    }
 
-		if (term == null) {
-			bookPage = bookService.findPaginated(PageRequest.of(currentPage - 1, pageSize), null);
-		} else {
-			bookPage = bookService.findPaginated(PageRequest.of(currentPage - 1, pageSize), term);
-		}
-		model.addAttribute("bookPage", bookPage);
+    private String page(@RequestParam("term") String term, Model model, @RequestParam("page") Optional<Integer> page,
+            @RequestParam("size") Optional<Integer> size) {
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(pageSizeDefault);
 
-		int totalPages = bookPage.getTotalPages();
-		if (totalPages > 0) {
-			List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
-			model.addAttribute("pageNumbers", pageNumbers);
-		}
-		return "index";
-	}
+        Page<Book> bookPage;
+
+        if (term == null || term.isBlank()) {
+            bookPage = bookService.findPaginated(PageRequest.of(currentPage - 1, pageSize), null);
+        } else {
+            bookPage = bookService.findPaginated(PageRequest.of(currentPage - 1, pageSize), term);
+        }
+        model.addAttribute("bookPage", bookPage);
+
+        int totalPages = bookPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        return "index";
+    }
 }

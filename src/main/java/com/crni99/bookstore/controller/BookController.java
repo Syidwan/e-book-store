@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.crni99.bookstore.model.Book;
@@ -47,6 +48,22 @@ public class BookController {
 		}
 		return page(term, model, page, size);
 	}
+
+	// @GetMapping("/api/search")
+   //  @ResponseBody
+   //  public Page<Book> searchBooksApi(@RequestParam("term") String term,
+   //                                   @RequestParam("page") Optional<Integer> page,
+   //                                   @RequestParam("size") Optional<Integer> size) {
+   //      int currentPage = page.orElse(1);
+   //      int pageSize = size.orElse(10);
+   //      PageRequest pageRequest = PageRequest.of(currentPage - 1, pageSize);
+
+   //      if (term.isBlank()) {
+   //          return bookService.findPaginated(pageRequest, null);
+   //      } else {
+   //          return bookService.findPaginated(pageRequest, term);
+   //      }
+   //  }
 
 	private String page(@RequestParam("term") String term, Model model, @RequestParam("page") Optional<Integer> page,
 			@RequestParam("size") Optional<Integer> size) {
