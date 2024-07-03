@@ -138,6 +138,31 @@ p{
     color: grey;
 }
 /*===Product====*/
+.product{
+    background-color: #E7E5E5;
+}
+.btn{
+    outline: none;
+    border: none;
+    color: white;
+    background: #C39E29;
+    border-radius: 8px;
+    transition: all 0.4s;
+}
+.btn:hover{
+    background-color:#af8f26;
+}
+.card{
+    color: white;
+    border-radius: 10px;
+}
+.custom-shadow {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.list-group-item {
+    border: none;
+}
+
 .product h1{
     font-size: 3rem;
     font-weight: bold;
@@ -151,8 +176,10 @@ p{
     font-size: 18px;
     color: grey;
 }
+/*============*/
 
-/*======*/
+
+
 .contact{
 	background: url(../images/Contact.png)no-repeat;
 	background-size: cover;

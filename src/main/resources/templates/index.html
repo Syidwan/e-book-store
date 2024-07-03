@@ -4,10 +4,10 @@
 
 <body>
     <nav th:replace="layout :: header"></nav>
-
-    <div class="container" id="main-content">
-        <div class="row">
-            <div class="col-6 no-padding">
+    <section class="product py-5">
+    <div class="container " id="main-content">
+        <div class="row ;">
+            <div class="col-12 d-flex justify-content-end">
                 <form class="form-inline" action="#" th:action="@{/search}" method="get" onsubmit="return validateForm()">
                     <input class="form-control mr-sm-2" type="search" name="term" id="search-term"
                            placeholder="Search by name ..." th:value="${term}" />
@@ -40,19 +40,19 @@
                     <div class="col-sm-6"
                          style="max-width: 32rem; display: inline-block; width: 32rem;"
                          th:each="book, iStat : ${bookPage.content}">
-                        <div class="card text-white bg-dark"
+                        <div class="card text-dark bg-white custom-shadow"
                              style="width: 32rem; margin-bottom: 50px">
-                            <img class="card-img-top" src="..." alt="Card image cap">
+                            <img class="card-img-top" src="/images/Harypotter.png" alt="Card image cap">
                             <div class="card-body">
                                 <h5 class="card-title" th:text="${book.name}"></h5>
                                 <p class="card-text" th:text="${book.authors}"></p>
                             </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item text-white bg-dark"
+                            <ul class="list-group list-group-flush bg-white">
+                                <li class="list-group-item text-dark"
                                     th:text="${book.publisher}"></li>
-                                <li class="list-group-item text-white bg-dark"
+                                <li class="list-group-item text-dark "
                                     th:text="${book.publishedOn}"></li>
-                                <li class="list-group-item text-white bg-dark"
+                                <li class="list-group-item text-dark"
                                     th:text="${book.isbn}"></li>
                             </ul>
                             <div class="card-footer" style="display: inline">
@@ -60,7 +60,7 @@
                                    th:text="${book.price} + ' ' + '$'"></i>
                                 <form class="form-inline" style="float: right" action="#"
                                       th:action="@{/cart/add/{id}(id=${book.id})}" method="get">
-                                    <button class="btn btn-success" type="submit">
+                                    <button class="btn" type="submit">
                                         <i class="fa fa-plus-circle"></i> Add to cart
                                     </button>
                                 </form>
@@ -72,7 +72,7 @@
 					th:each="pageNumber : ${pageNumbers}">
 					<nav aria-label="Page navigation example">
 						<ul class="pagination">
-							<li class="page-item font-weight-bold"><a th:href="@{/listBooks(size=${bookPage.size}, page=${pageNumber})}"
+							<li class="page-item font-weight-bold text-dark"><a th:href="@{/listBooks(size=${bookPage.size}, page=${pageNumber})}"
                                 th:text="${pageNumber}"
                                 class="page-link"></a></li>
 						</ul>
@@ -81,6 +81,7 @@
             </th:block>
         </div>
     </div>
+</section>
 
     <script>
         function validateForm() {
